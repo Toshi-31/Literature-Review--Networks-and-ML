@@ -1,0 +1,40 @@
+PROBLEM STATEMENT AND MOTIVATION
+We are concerned with leveraging Large Language Models (LLMs), specifically GPT-3.5-turbo, to automate the understanding of networking protocols from Internet Request for Comments (RFC) documents.The tool developed, called Artifact Miner, aims to extract diagram artifacts from RFCs and combine them with natural language text to extract protocol automata using GPT-turbo 3.5, termed as PROSPER (Protocol Specification Miner).
+
+Challenges in this endeavor include the inherent ambiguity of natural text in RFCs, the need for collaboration with domain experts for accurate protocol modeling, and the lack of high-quality annotated data for training NLP models in technical domains like network protocols.
+
+The paper aims to answer the following questions:  the effectiveness of LLMs compared to other techniques for protocol information extraction, the generalizability of LLM-based extraction across various RFCs, and the potential of utilizing non-textual components of RFCs to enhance information extraction.
+
+SYSTEM DESIGN
+1. RFC Selection Methodology: RFCs were chosen to cover diverse networking protocols, including those emphasized in previous works like DCCP, PPTP, and TCP. Selection involved clustering RFCs into topics, ensuring representation from different areas, considering influential RFCs, and forming a training and validation set for prompt engineering.
+
+2. RFC Cleansing: Cleaning involved removing irrelevant information such as headers, table of contents, references, and appendices. This step aimed to streamline the documents for better processing and extraction.
+
+3. RFC Chunking: Cleaned RFCs were divided into manageable chunks of 500 lines each to fit within the maximum context lengths of LLMs like GPT-3.5-turbo. This chunking process retained both plain text and textual figures (artifacts) for extraction, as demonstrated by experiments.
+
+4. Automating RFC Protocol Understanding: The system approached protocol information extraction through two perspectives: extracting FSMs from natural language specifications and extracting information from textual artifacts using Artifact Miner. Engineering LLM prompts involved refining prompts through manual and automatic strategies based on train RFCs, leading to more effective extraction of protocol information.
+
+SYSTEM EVALUATION
+
+Qualitative Benefits of Using Pre-trained LLMs:
+
+1. Self-evaluation Capability: By leveraging pre-trained LLMs, PROSPER enables a unique self-evaluation capability. Unlike deterministic approaches like XML-like semantic tagging, LLMs provide outputs in various formats, necessitating the model to generate Python code for drawing FSMs using packages like 'pygraphviz'. This self-evaluation mechanism ensures that the extracted information aligns with the expected format, enhancing the overall effectiveness of protocol information extraction.
+   
+2. Generalizability: One of the remarkable advantages of utilizing pre-trained LLMs is their inherent generalizability. As these models are trained on a vast corpus of internet text, including technical documents like RFCs, they inherently understand diverse text formats and structures. Unlike approaches dependent on predefined state machine grammars, PROSPER's reliance on LLMs enables it to adapt to various RFC formats, potentially covering a wide range of protocols. This generalizability is crucial, especially considering the diverse nature of RFC documents, each adhering to different conventions and styles.
+
+3. Coverage Enrichment: LLMs go beyond merely processing plain text; they possess the capability to comprehend textual artifacts such as diagrams, which are prevalent in RFCs. These diagrams often convey critical protocol information, supplementing or even compensating for ambiguities or missing details in the text. PROSPER's integration of textual artifacts into the extraction process significantly enriches the coverage of protocol specifications. This ability to extract information from both textual and non-textual elements ensures a more comprehensive understanding of RFCs, ultimately leading to more accurate protocol automata extraction.
+
+Quantitative Experimental Results:
+
+1. Communication Transitions Extraction: In the realm of communication transitions extraction, PROSPER demonstrates notable performance compared to previous methods. By reducing false positives while maintaining or even improving true positives, PROSPER showcases its effectiveness and flexibility in accurately capturing protocol FSMs from RFCs. The comparison with RFCNLP highlights PROSPER's superiority in minimizing erroneous extractions, ensuring the reliability of the extracted information for various networking applications.
+
+2. Artifact Extraction: PROSPER, equipped with Artifact Miner, achieves impressive results in artifact extraction from RFCs. The combination of heuristic-based extraction and LLM processing yields a high number of true positives while effectively mitigating false positives. This outcome underscores the generalizability and applicability of the framework across different RFC documents and artifact types. By successfully extracting artifacts such as message structures, data flow diagrams, and topology diagrams, PROSPER enhances the overall understanding of protocol specifications, thereby facilitating downstream tasks like automated code de-bloating and network troubleshooting.
+
+LIMITATIONS
+1. Model Limitations: Foundational NLP models like PROSPER suffer from issues such as false positives, bias, and contextual misunderstandings, hampering accurate protocol information extraction.
+2. Output Consistency: The probabilistic nature of LLMs results in varying output formats, but PROSPER mitigates this by using autoregressive generation to ensure consistent output structures, particularly when querying for transitions.
+3. Extraction Trade-off: PROSPER prioritizes generalizability over end-to-end extraction capability, necessitating human intervention for comprehensive understanding. Efforts are ongoing to refine the approach and potentially eliminate the need for manual intervention.
+4. Benchmarking Challenges: Due to the lack of tailored benchmark datasets for RFCs, evaluating model performance relies heavily on human assessment. While some datasets exist for prompt engineering, further refinement is needed for comprehensive evaluation and improvement of model accuracy. Future work aims to address this gap in benchmarking methodologies.
+
+CONCLUSION
+In conclusion, PROSPER presents a framework leveraging LLMs to automatically extract protocol specifications from RFCs. It outperforms existing methods in FSM extraction, achieving more true positives and fewer false positives. Future work focuses on streamlining PROSPER to be end-to-end, integrating its outputs into various applications such as software debloating and intrusion detection.
